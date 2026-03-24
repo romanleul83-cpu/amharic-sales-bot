@@ -1,118 +1,118 @@
 export const MESSAGES = {
-  greeting: `👋 Hello! Welcome!
+  greeting: `👋 ሰላም! እንኳን ደህና መጣህ/መጣሽ!
 
-I'm here to share something exciting — a *simple income opportunity* that's changing lives.
+እኔ ሕይወትን እየቀየሩ ያሉ ሰዎችን ስለሚያግዝ *ቀላል የገቢ ዕድል* ላጋራህ/ላጋራሽ ነኝ።
 
-Before I show you how it works, I'd love to learn a bit about you.
+ከማሳየቴ በፊት ስለ አንተ/ስለ አንቺ ትንሽ ልወቅ/ልወቅ።
 
-What's your *first name*?`,
+*ስምህ/ስምሽ* ምን ይባላል?`,
 
-  askGoal: (name: string) => `Great to meet you, *${name}*! 🙌
+  askGoal: (name: string) => `እንኳን ደስ አለኝ፣ *${name}*! 🙌
 
-Let me ask you something important:
+አንድ አስፈላጊ ጥያቄ ልጠይቅህ/ልጠይቅሽ፡
 
-*Are you currently happy with your income, or are you looking for a way to earn more?*
+*ከአሁን ያለህ/ያለሽ ገቢ ረክተሃል/ረክተሻል? ወይስ ተጨማሪ ለማግኘት ትፈልጋለህ/ትፈልጊያለሽ?*
 
-Reply with:
-1️⃣ - I want more income
-2️⃣ - I'm doing okay but open to ideas
-3️⃣ - I'm not interested right now`,
+ምላሽ ስጥ/ስጪ፡
+1️⃣ - ተጨማሪ ገቢ እፈልጋለሁ
+2️⃣ - ጥሩ ነኝ ግን ለሃሳቡ ክፍት ነኝ
+3️⃣ - አሁን አልፈልግም`,
 
-  askTime: `Perfect! Here's a quick question:
+  askTime: `ሰለካ! አጭር ጥያቄ፡
 
-*How much time could you dedicate to building something new?*
+*ለአዲስ ነገር ልትሰጥ/ልትሰጪ የምትችለው ጊዜ ስንት ነው?*
 
-1️⃣ - Less than 1 hour/day
-2️⃣ - 1-3 hours/day  
-3️⃣ - More than 3 hours/day`,
+1️⃣ - ከ1 ሰዓት ያነሰ በቀን
+2️⃣ - ከ1-3 ሰዓት በቀን
+3️⃣ - ከ3 ሰዓት በላይ በቀን`,
 
-  askDecision: `One more question before I show you the opportunity:
+  askDecision: `እሺ! ሌላ ጥያቄ፡
 
-*Are you someone who makes their own decisions, or do you need to consult others first?*
+*ለራስህ/ለራስሽ ውሳኔ የምትሰጥ/የምትሰጪ ሰው ነህ/ነሽ? ወይስ ሌሎችን ምክር ትሻ/ትሺ?*
 
-1️⃣ - I make my own decisions
-2️⃣ - I'd need to check with my partner/family`,
+1️⃣ - የራሴን ውሳኔ እሰጣለሁ
+2️⃣ - አጋሬን/ቤተሰቤን ምክር ልጠይቅ ይሻለኛል`,
 
-  askUrgency: `Last one — I promise! 😄
+  askUrgency: `አንድ ጥያቄ ብቻ ቀረ — ቃል እገባለሁ! 😄
 
-*How soon do you need a change in your income situation?*
+*ለገቢ ሁኔታህ/ሁኔታሽ ለውጥ ምን ያህል ፈጥኖ ትፈልጋለህ/ትፈልጊያለሽ?*
 
-1️⃣ - ASAP — I need this now
-2️⃣ - Within the next few months
-3️⃣ - Someday, no rush`,
+1️⃣ - ወዲያውኑ — አሁኑኑ እፈልጋለሁ
+2️⃣ - በቀጣዮቹ ወራት ውስጥ
+3️⃣ - ቀስ በቀስ — ጥድፊያ የለኝም`,
 
-  presentation: `🎯 *Here's Your Opportunity*
+  presentation: `🎯 *ዕድሉ እዚህ ነው!*
 
-I work with a network marketing company that has a *simple, proven system* for creating income.
+ቀላልና ተረጋግጦ ሥርዓት ያለው የኔትወርክ ማርኬቲንግ ቢዝነስ ውስጥ እሰራ/እሰሪ ዋለሁ።
 
-💡 *How it works:*
-✅ Join with one of our packages (Starter → Advanced)
-✅ Introduce others to the opportunity (earn direct income)
-✅ Help your team grow (earn leveraged income)
+💡 *እንዴት ይሰራል፡*
+✅ ከሦስት ፓኬጆቻችን አንዱን ይምረጡ (ስታርተር → አድቫንስ)
+✅ ሌሎችን ዕድሉን አስተዋውቁ (ቀጥታ ገቢ ያስገኛል)
+✅ ቡድን ምሰሩ (ሳይዘናጉ ገቢ ያስገኛል)
 
-📦 *Our Packages:*
-• 🟢 *Starter* — Low entry, get started quickly
-• 🔵 *Mid Level* — More earning power
-• 🔴 *Advanced* — Maximum earning potential
+📦 *ፓኬጆቻችን፡*
+• 🟢 *ስታርተር* — ዝቅተኛ ዋጋ፣ ፈጣን ጅምር
+• 🔵 *ሚድ ሌቬል* — የተሻለ ማልደሚያ
+• 🔴 *አድቫንስ* — ከፍተኛ ምልከታ ዕምቅ
 
-🔁 *The System:*
-Invite → Show → Follow Up → Help Start → Duplicate
+🔁 *ሥርዓቱ፡*
+ጋብዝ → አሳይ → ክትትል → አስጀምር → አስተምር
 
-✨ *What you get:*
-• No experience needed
-• Full mentorship & support
-• Flexible — work around your schedule
-• Active + passive income streams
-• Personal development included
+✨ *ምን ታገኛለህ/ታገኚያለሽ፡*
+• ቀደምት ልምድ አያስፈልግም
+• ሙሉ ስልጠናና ድጋፍ
+• ለሰዓት ሰሌዳህ/ሰሌዳሽ ሚሳምን
+• ቀጥተኛ + ተሻጋሪ ገቢ
+• የግል ዕድገት ተካቷል
 
-*The best part?* You don't sell. You share. The system does the work.
+*ትሸጥ/ትሸጪ አይደለህ/አይደለሽ — ትጋራ/ትጋሪ ብቻ ነው። ሥርዓቱ ራሱ ሥራዉን ያሠራ።*
 
-👇 Do you have any questions, or are you ready to explore how to get started?`,
+👇 ጥያቄ አለህ/አለሽ? ወይስ ለመጀመር ዝግጁ ነህ/ነሽ?`,
 
-  hotLead: `🔥 *You sound like exactly the kind of person this works for!*
+  hotLead: `🔥 *ቁልፍ ሰው ነህ/ነሽ!*
 
-You're motivated, decisive, and ready to take action — those are the qualities that make people succeed in this.
+ተነሳሽነቱ፣ ቁርጠኝነቱ፣ እና ለሥራ ዝግጁ የሆነ ሰው ነህ/ነሽ — ይህ ቢዝነስ ለሚሳካ ሰው ያሉ ባሕርያት ናቸው።
 
-I'd love to connect you with my mentor directly so you can get all your questions answered and get started.
+ሁሉ ጥያቄዎቻቸን ለመመለስ ወዲያውኑ ካሠልጣኝ ጋር ለማገናኘት እፈልጋለሁ።
 
-*Are you ready to take the next step?* 🚀
+*ለቀጣዩ እርምጃ ዝግጁ ነህ/ነሽ?* 🚀
 
-Reply *YES* and I'll connect you right away!`,
+*አዎ* ብሎ/ብላ ይምለሱ እና ወዲያው ያገናኙሃቸዋለሁ!`,
 
-  warmFollowUp1: `👋 Hey! Just checking in.
+  warmFollowUp1: `👋 ሰላም! እንዴት ነህ/ነሽ?
 
-I know life gets busy, but I wanted to remind you — the opportunity we discussed is still available.
+ሕይወት ስጥጥ ያለ ጊዜ አለ — ያ ትክክል ነው። ነገር ግን ስለ ዕድሉ ያወራናቸውን ለማስታወስ ፈልጌ ነው።
 
-*Here's what I want you to remember:*
-Most people who succeed here started exactly where you are — unsure, a little hesitant, but willing to try.
+*ሁሌ ያስታውሰኝ/ያስታውሰሽ ነው፡*
+ሁሉም ሰው የሚሳካ ሰው ትልቅ ጥርጣሬ ሲኖረው ነበር — ነገር ግን ለመሞከር ፈቃደኛ ሆነ።
 
-*What's the one thing holding you back right now?*`,
+*አሁን ምን ነው የሚያቆምህ/የሚያቆምሽ?*`,
 
-  warmFollowUp2: `💡 *Quick thought for you...*
+  warmFollowUp2: `💡 *አንድ ሃሳብ...*
 
-Every day without an extra income stream is a day working only for others.
+ለሌሎች ብቻ ሲሰሩ የሚያሳልፉ ሁሉም ቀናት ያለፉ ቀናት ናቸው።
 
-What if 6 months from now you looked back and said: *"I'm glad I took that step."*
+ከ6 ወር በኋላ ወደ ኋላ ዞር ስታይ/ስታዪ፡ *"ደስ ብሎኛል ያን እርምጃ ወሰዳሁ"* ብትል/ብትዪ ምን ይሰማሃል/ይሰማሽ?
 
-The door is still open. What do you say? 🚀`,
+ደጃፉ አሁንም ክፍት ነው። ምን ትላለህ/ትያለሽ? 🚀`,
 
-  warmFollowUp3: `🎯 *Final check-in!*
+  warmFollowUp3: `🎯 *የመጨረሻ ቁርጥ!*
 
-I don't want to keep nudging you if this isn't for you — and that's totally okay.
+ለህ/ለሽ ጠቃሚ ካልሆነ ለቦታህ/ለቦታሽ መቆም አልፈልግም — ያ ሙሉ ለሙሉ ደህና ነው።
 
-But if there's ANY part of you that's curious about creating extra income...
+ግን ለቀጣዩ ወር ወይም አንድ ቀን ተጨማሪ ገቢ ለፈጠር ስለምትፈልግ/ስለምትፈልጊ ምንም ነገር ካለ...
 
-*Now is a great time to ask your last questions and decide.*
+*አሁን ቀሪ ጥያቄዎቻቸን ለመጠየቅ እና ውሳኔ ለመስጠት ጥሩ ጊዜ ነው።*
 
-What's on your mind? 🤔`,
+ምን አለ? 🤔`,
 
-  coldLead: `No worries at all! 😊
+  coldLead: `ምንም ቅሬታ የለም! 😊
 
-This opportunity isn't for everyone, and that's completely okay.
+ይህ ዕድል ለሁሉም ሰው አይሆንም — ያ ሙሉ ለሙሉ ደህና ነው።
 
-If you ever change your mind or know someone who might be interested, feel free to come back anytime!
+ሃሳብህ/ሃሳብሽ ቢቀየር ወይም ፍላጎት ሊኖረው/ሊኖራት ሰው ብታውቅ/ብታውቂ፣ ማንኛውም ጊዜ ኑ/ኑ!
 
-Take care, and wishing you all the best! 🌟`,
+ሁሉ ነገር ደህና ይሁን! 🌟`,
 
   adminNotification: (lead: {
     firstName?: string | null;
@@ -123,26 +123,26 @@ Take care, and wishing you all the best! 🌟`,
     answers?: string | null;
   }) => {
     const answers = lead.answers ? JSON.parse(lead.answers) : {};
-    return `🔥 *HOT LEAD READY FOR CLOSING!*
+    return `🔥 *ሞቃት ደምበኛ ለዝጋቱ ዝግጁ ነው!*
 
-👤 *Name:* ${lead.firstName || "Unknown"}
-📱 *Username:* ${lead.username ? `@${lead.username}` : "No username"}
-🆔 *Telegram ID:* ${lead.telegramId}
-🌡️ *Temperature:* ${lead.temperature?.toUpperCase()}
-⭐ *Score:* ${lead.qualificationScore}/100
+👤 *ስም፡* ${lead.firstName || "አይታወቅም"}
+📱 *ዩዘርኔም፡* ${lead.username ? `@${lead.username}` : "ዩዘርኔም የለም"}
+🆔 *Telegram ID፡* ${lead.telegramId}
+🌡️ *ሙቀት፡* ${lead.temperature === "hot" ? "ሞቃት 🔥" : lead.temperature === "warm" ? "ሞቅ 🟡" : "ቀዝቀዝ 🔵"}
+⭐ *ነጥብ፡* ${lead.qualificationScore}/100
 
-📋 *Qualification Answers:*
-• Income goal: ${answers.goal || "N/A"}
-• Time available: ${answers.time || "N/A"}
-• Decision maker: ${answers.decision || "N/A"}
-• Urgency: ${answers.urgency || "N/A"}
+📋 *የብቃት ምላሾች፡*
+• የገቢ ዓላማ፡ ${answers.goal || "አልተሰጠም"}
+• ጊዜ፡ ${answers.time || "አልተሰጠም"}
+• ውሳኔ ሰጪ፡ ${answers.decision || "አልተሰጠም"}
+• አስቸኳይነት፡ ${answers.urgency || "አልተሰጠም"}
 
-👉 *Action:* Message this prospect directly on Telegram to close!`;
+👉 *እርምጃ፡* ለዝጋቱ ይህን ደምበኛ በቀጥታ Telegram ላይ ያናገሩ!`;
   },
 
-  readyToConnect: `🎉 Amazing! I'll let my mentor know you're ready.
+  readyToConnect: `🎉 በጣም ሰለካ! ካሠልጣኙ ጋር ማለቅ ነው።
 
-*They'll reach out to you very shortly* to answer any final questions and help you get started.
+*በቅርቡ ወዲያው ያናግሩሃቸዋል* ሁሉ ጥያቄዎቻቸን ለመመለስ እና ለመጀመር ያግዙሃቸዋል።
 
-Get ready — your journey to a better income is about to begin! 🚀`,
+ዝጋጁ — ለተሻለ ገቢ ጉዟቸ ሊጀምር ነው! 🚀`,
 };
