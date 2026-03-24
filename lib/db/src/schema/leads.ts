@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, timestamp, pgEnum } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, timestamp, pgEnum, boolean } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod/v4";
 
@@ -38,3 +38,19 @@ export const conversationMessagesTable = pgTable("conversation_messages", {
 export const insertConversationMessageSchema = createInsertSchema(conversationMessagesTable).omit({ id: true, createdAt: true });
 export type InsertConversationMessage = z.infer<typeof insertConversationMessageSchema>;
 export type ConversationMessage = typeof conversationMessagesTable.$inferSelect;
+
+export const mediaFilesTable = pgTable("media_files", {
+  id: serial("id").primaryKey(),
+  fileId: text("file_id").notNull(),
+  fileType: text("file_type").notNull(), // "photo" | "video" | "document"
+  category: text("category").notNull(), // "testimony" | "compensation" | "presentation" | "rank_reward" | "package" | "general"
+  description: text("description").notNull(),
+  tags: text("tags"), // comma-separated keywords
+  addedBy: text("added_by"),
+  active: boolean("active").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const insertMediaFileSchema = createInsertSchema(mediaFilesTable).omit({ id: true, createdAt: true });
+export type InsertMediaFile = z.infer<typeof insertMediaFileSchema>;
+export type MediaFile = typeof mediaFilesTable.$inferSelect;
