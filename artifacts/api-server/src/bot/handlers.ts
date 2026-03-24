@@ -2,7 +2,7 @@ import TelegramBot from "node-telegram-bot-api";
 import { MESSAGES } from "./messages";
 import { getOrCreateLead, getLead, updateLead, saveMessage, getConversationHistory } from "./leadService";
 import { handleObjection, qualifyLead, selectMedia } from "./ai";
-import { getAllActiveMedia, addMedia, listMedia, deleteMedia } from "./mediaService";
+import { getAllActiveMedia, addMedia, listMedia, deleteMedia, getMediaById } from "./mediaService";
 import { getBotStats, formatStatsMessage } from "./statsService";
 import { logger } from "../lib/logger";
 
@@ -10,6 +10,9 @@ const adminId = process.env.TELEGRAM_ADMIN_ID ?? "";
 
 // In-memory state: admin pending media upload { category, description }
 const pendingMediaUpload = new Map<string, { category: string; description: string }>();
+
+// In-memory state: media offered to a user but not yet sent
+const pendingMediaOffer = new Map<string, number[]>();
 
 function isAdmin(telegramId: string): boolean {
   return telegramId === adminId;
@@ -401,7 +404,14 @@ async function handleUrgencyInput(bot: TelegramBot, chatId: number, telegramId: 
 async function handlePostPresentation(bot: TelegramBot, chatId: number, telegramId: string, text: string, lead: any): Promise<void> {
   const lower = text.toLowerCase();
 
+  // User confirming they want the offered media
+  if (isMediaConfirmation(lower) && pendingMediaOffer.has(telegramId)) {
+    await deliverOfferedMedia(bot, chatId, telegramId);
+    return;
+  }
+
   if (lower === "yes" || lower.includes("ready") || lower.includes("start") || lower.includes("interested") || lower.includes("let's go") || lower.includes("sign me up") || lower === "አዎ") {
+    pendingMediaOffer.delete(telegramId);
     await updateLead(telegramId, { stage: "hot", status: "qualified", temperature: "hot" });
     await sendAndSave(bot, chatId, telegramId, MESSAGES.readyToConnect);
     await notifyAdmin(bot, telegramId);
@@ -409,6 +419,7 @@ async function handlePostPresentation(bot: TelegramBot, chatId: number, telegram
   }
 
   if (lower.includes("not interested") || lower.includes("forget") || lower === "አልፈልግም") {
+    pendingMediaOffer.delete(telegramId);
     await updateLead(telegramId, { stage: "cold", status: "cold", temperature: "cold" });
     await sendAndSave(bot, chatId, telegramId, MESSAGES.coldLead);
     return;
@@ -422,7 +433,7 @@ async function handlePostPresentation(bot: TelegramBot, chatId: number, telegram
 
   await saveMessage(telegramId, "assistant", response);
   await bot.sendMessage(chatId, response, { parse_mode: "Markdown" });
-  await sendMediaFiles(bot, chatId, mediaIds);
+  await offerMediaIfRelevant(bot, chatId, telegramId, mediaIds);
 
   if (!lead.temperature || lead.temperature === "cold") {
     await updateLead(telegramId, { stage: "follow_up", status: "follow_up", temperature: "warm" });
@@ -432,7 +443,14 @@ async function handlePostPresentation(bot: TelegramBot, chatId: number, telegram
 async function handleFollowUpResponse(bot: TelegramBot, chatId: number, telegramId: string, text: string, lead: any): Promise<void> {
   const lower = text.toLowerCase();
 
+  // User confirming they want the offered media
+  if (isMediaConfirmation(lower) && pendingMediaOffer.has(telegramId)) {
+    await deliverOfferedMedia(bot, chatId, telegramId);
+    return;
+  }
+
   if (lower === "yes" || lower.includes("ready") || lower.includes("start") || lower.includes("interested") || lower === "አዎ") {
+    pendingMediaOffer.delete(telegramId);
     await updateLead(telegramId, { stage: "hot", status: "qualified", temperature: "hot" });
     await sendAndSave(bot, chatId, telegramId, MESSAGES.readyToConnect);
     await notifyAdmin(bot, telegramId);
@@ -440,6 +458,7 @@ async function handleFollowUpResponse(bot: TelegramBot, chatId: number, telegram
   }
 
   if (lower.includes("not interested") || lower.includes("stop") || lower === "አልፈልግም") {
+    pendingMediaOffer.delete(telegramId);
     await updateLead(telegramId, { stage: "cold", status: "cold", temperature: "cold" });
     await sendAndSave(bot, chatId, telegramId, MESSAGES.coldLead);
     return;
@@ -453,12 +472,20 @@ async function handleFollowUpResponse(bot: TelegramBot, chatId: number, telegram
 
   await saveMessage(telegramId, "assistant", response);
   await bot.sendMessage(chatId, response, { parse_mode: "Markdown" });
-  await sendMediaFiles(bot, chatId, mediaIds);
+  await offerMediaIfRelevant(bot, chatId, telegramId, mediaIds);
 }
 
 async function handleHotLeadResponse(bot: TelegramBot, chatId: number, telegramId: string, text: string): Promise<void> {
   const lower = text.toLowerCase();
+
+  // User confirming they want the offered media
+  if (isMediaConfirmation(lower) && pendingMediaOffer.has(telegramId)) {
+    await deliverOfferedMedia(bot, chatId, telegramId);
+    return;
+  }
+
   if (lower === "yes" || lower.includes("ready") || lower === "አዎ") {
+    pendingMediaOffer.delete(telegramId);
     await sendAndSave(bot, chatId, telegramId, MESSAGES.readyToConnect);
     await notifyAdmin(bot, telegramId);
   } else {
@@ -469,11 +496,28 @@ async function handleHotLeadResponse(bot: TelegramBot, chatId: number, telegramI
     ]);
     await saveMessage(telegramId, "assistant", response);
     await bot.sendMessage(chatId, response, { parse_mode: "Markdown" });
-    await sendMediaFiles(bot, chatId, mediaIds);
+    await offerMediaIfRelevant(bot, chatId, telegramId, mediaIds);
   }
 }
 
 // ─── Media Helpers ─────────────────────────────────────────────────────────
+
+function isMediaConfirmation(lower: string): boolean {
+  return (
+    lower === "ቪዲዮ" ||
+    lower === "video" ||
+    lower === "ፎቶ" ||
+    lower === "photo" ||
+    lower === "አዎ ልካህ" ||
+    lower === "አዎ" ||
+    lower.includes("ቪዲዮ ልካህ") ||
+    lower.includes("ቪዲዮ ልኪ") ||
+    lower.includes("ይልካህ") ||
+    lower.includes("send video") ||
+    lower.includes("ልካህ") ||
+    lower.includes("ልኪ")
+  );
+}
 
 async function getRelevantMedia(
   userMessage: string,
@@ -489,36 +533,72 @@ async function getRelevantMedia(
   }
 }
 
-async function sendMediaFiles(bot: TelegramBot, chatId: number, mediaIds: number[]): Promise<void> {
-  if (mediaIds.length === 0) return;
+async function offerMediaIfRelevant(
+  bot: TelegramBot,
+  chatId: number,
+  telegramId: string,
+  mediaIds: number[]
+): Promise<void> {
+  if (mediaIds.length === 0) {
+    pendingMediaOffer.delete(telegramId);
+    return;
+  }
+
+  // Build a description of what will be sent
+  const previews: string[] = [];
+  for (const id of mediaIds) {
+    const media = await getMediaById(id);
+    if (media) {
+      const icon = media.fileType === "video" ? "📹" : media.fileType === "photo" ? "🖼️" : "📄";
+      previews.push(`${icon} ${media.description}`);
+    }
+  }
+
+  if (previews.length === 0) return;
+
+  // Store the offer
+  pendingMediaOffer.set(telegramId, mediaIds);
+
+  const offerText =
+    `\n\n━━━━━━━━━━━━━\n` +
+    `📎 *ከዚህ ጋር ተያያዥ ሚዲያ አለ፡*\n` +
+    previews.map(p => `• ${p}`).join("\n") +
+    `\n\n👉 ልካህ/ልኪ ፈልጋለህ/ፈልጋለሽ? *"ቪዲዮ"* ወይም *"ፎቶ"* ብለህ/ብለሽ ምላሽ ስጥ/ስጪ።`;
+
+  await bot.sendMessage(chatId, offerText, { parse_mode: "Markdown" });
+}
+
+async function deliverOfferedMedia(bot: TelegramBot, chatId: number, telegramId: string): Promise<void> {
+  const mediaIds = pendingMediaOffer.get(telegramId);
+  pendingMediaOffer.delete(telegramId);
+  if (!mediaIds || mediaIds.length === 0) return;
 
   for (const id of mediaIds) {
     try {
-      const { getMediaById } = await import("./mediaService");
       const media = await getMediaById(id);
       if (!media) continue;
 
-      await new Promise(r => setTimeout(r, 500));
+      await new Promise(r => setTimeout(r, 400));
 
       if (media.fileType === "photo") {
-        await bot.sendPhoto(chatId, media.fileId, {
-          caption: media.description,
-        });
+        await bot.sendPhoto(chatId, media.fileId, { caption: media.description });
       } else if (media.fileType === "video") {
-        await bot.sendVideo(chatId, media.fileId, {
-          caption: media.description,
-        });
+        await bot.sendVideo(chatId, media.fileId, { caption: media.description });
       } else if (media.fileType === "document") {
-        await bot.sendDocument(chatId, media.fileId, {
-          caption: media.description,
-        });
+        await bot.sendDocument(chatId, media.fileId, { caption: media.description });
       }
 
-      logger.info({ chatId, mediaId: id, fileType: media.fileType }, "Media sent to user");
+      logger.info({ chatId, mediaId: id, fileType: media.fileType }, "Media delivered to user");
     } catch (err) {
-      logger.error({ err, mediaId: id }, "Failed to send media file");
+      logger.error({ err, mediaId: id }, "Failed to deliver media");
     }
   }
+
+  await bot.sendMessage(
+    chatId,
+    "✅ ቪዲዮዎቹ/ፎቶዎቹ ደረሱህ/ደረሱሽ! ሌላ ጥያቄ ካለህ/ካለሽ ጠይቅ/ጠይቂ። 😊",
+    { parse_mode: "Markdown" }
+  );
 }
 
 // ─── Admin Notification ────────────────────────────────────────────────────

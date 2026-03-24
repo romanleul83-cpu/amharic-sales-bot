@@ -141,7 +141,7 @@ export async function generateAIResponse(
     model: "gemini-3-flash-preview",
     contents,
     config: {
-      maxOutputTokens: 600,
+      maxOutputTokens: 2048,
       systemInstruction: BUSINESS_CONTEXT + "\n\n" + systemPrompt,
     },
   });
