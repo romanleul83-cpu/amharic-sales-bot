@@ -1,19 +1,26 @@
 import { GoogleGenAI } from "@google/genai";
 
-if (!process.env.AI_INTEGRATIONS_GEMINI_BASE_URL) {
-  throw new Error("AI_INTEGRATIONS_GEMINI_BASE_URL must be set.");
-}
-if (!process.env.AI_INTEGRATIONS_GEMINI_API_KEY) {
-  throw new Error("AI_INTEGRATIONS_GEMINI_API_KEY must be set.");
+// Supports two modes:
+// 1. Replit hosting: uses AI_INTEGRATIONS_GEMINI_BASE_URL + AI_INTEGRATIONS_GEMINI_API_KEY (auto-provisioned)
+// 2. External hosting (Railway/Render): uses GEMINI_API_KEY with standard Google API
+const apiKey =
+  process.env.AI_INTEGRATIONS_GEMINI_API_KEY ||
+  process.env.GEMINI_API_KEY;
+
+if (!apiKey) {
+  throw new Error("Set GEMINI_API_KEY (get a free key from https://aistudio.google.com/app/apikey)");
 }
 
-const ai = new GoogleGenAI({
-  apiKey: process.env.AI_INTEGRATIONS_GEMINI_API_KEY,
-  httpOptions: {
+const aiOptions: ConstructorParameters<typeof GoogleGenAI>[0] = { apiKey };
+
+if (process.env.AI_INTEGRATIONS_GEMINI_BASE_URL) {
+  aiOptions.httpOptions = {
     apiVersion: "",
     baseUrl: process.env.AI_INTEGRATIONS_GEMINI_BASE_URL,
-  },
-});
+  };
+}
+
+const ai = new GoogleGenAI(aiOptions);
 
 const BUSINESS_CONTEXT = `
 አንተ/አንቺ ለዚህ የቢዝነስ ዕድል ወዳጃዊ፣ ትክክለኛ ዕውቀት ያለህ/ያለሽ እና አሳማኝ የሽያጭ ረዳት ቦት ነህ/ነሽ።
