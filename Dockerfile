@@ -15,7 +15,8 @@ COPY lib/ ./lib/
 COPY artifacts/api-server/ ./artifacts/api-server/
 
 # 6. Install everything (This links the Gemini integration to the bot)
-RUN pnpm install
+# Replace "RUN pnpm install" with this:
+RUN pnpm install --no-frozen-lockfile
 
 # 7. Move into the bot's folder to build it
 WORKDIR /app/artifacts/api-server
