@@ -1,24 +1,29 @@
-# Use a lightweight Node.js environment
+# 1. Use Node 20 (slim version to save memory on Railway)
 FROM node:20-slim
 
-# Set the working directory inside the container
-WORKDIR /app
-
-# Install pnpm globally
+# 2. Install pnpm globally (required for your workspace)
 RUN npm install -g pnpm
 
-# Copy only the files needed for installing dependencies
-# Note: We assume these exist in artifacts/api-server
-COPY package.json pnpm-lock.yaml* ./
+# 3. Set the working directory
+WORKDIR /app
 
-# Install dependencies
+# 4. Copy the lockfile and workspace config from the ROOT 
+# (This is the "Gap" we are filling to make it build safely)
+COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
+
+# 5. Copy the api-server files
+COPY artifacts/api-server/package.json ./artifacts/api-server/
+COPY artifacts/api-server/ ./artifacts/api-server/
+
+# 6. Copy the libraries your bot depends on (from your package.json)
+COPY lib/ ./lib/
+
+# 7. Install all dependencies
 RUN pnpm install
 
-# Copy the rest of your bot's code
-COPY . .
+# 8. Move into the server folder and build
+WORKDIR /app/artifacts/api-server
+RUN pnpm run build
 
-# Build the TypeScript project
-RUN pnpm build
-
-# Start the bot using the compiled JavaScript
-CMD ["node", "dist/index.js"]
+# 9. Start the bot using your specific start script
+CMD ["pnpm", "run", "start"]
