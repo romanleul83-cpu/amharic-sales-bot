@@ -4,17 +4,17 @@ FROM node:20-slim
 # 2. Install pnpm
 RUN npm install -g pnpm
 
-# 3. Set the working directory to the very top (Root)
+# 3. Set workdir to root
 WORKDIR /app
 
-# 4. Copy the "Manager" files from the Root
+# 4. Copy the workspace configuration and lockfile
 COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
 
-# 5. Copy the "Worker" folders and the "Library" folders
+# 5. Copy ALL the folders the bot needs to function
 COPY lib/ ./lib/
 COPY artifacts/api-server/ ./artifacts/api-server/
 
-# 6. Install everything (pnpm will link the libraries automatically)
+# 6. Install everything (This links the Gemini integration to the bot)
 RUN pnpm install
 
 # 7. Move into the bot's folder to build it
