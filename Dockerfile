@@ -4,23 +4,22 @@ FROM node:20-slim
 # 2. Install pnpm
 RUN npm install -g pnpm
 
-# 3. Set workdir to root
+# 3. Set the working directory
 WORKDIR /app
 
-# 4. Copy the workspace configuration and lockfile
+# 4. Copy the workspace files
 COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
 
-# 5. Copy ALL the folders the bot needs to function
+# 5. Copy the library and bot folders
 COPY lib/ ./lib/
 COPY artifacts/api-server/ ./artifacts/api-server/
 
-# 6. Install everything (This links the Gemini integration to the bot)
-# Replace "RUN pnpm install" with this:
+# 6. Install everything (Ignore lockfile mismatches from the move)
 RUN pnpm install --no-frozen-lockfile
 
-# 7. Move into the bot's folder to build it
-WORKDIR /app/artifacts/api-server
+# 7. Build the libraries and the bot
 RUN pnpm run build
 
 # 8. Start the bot
+WORKDIR /app/artifacts/api-server
 CMD ["pnpm", "run", "start"]
