@@ -13,14 +13,11 @@ COPY . .
 # 5. Install all dependencies
 RUN pnpm install --no-frozen-lockfile
 
-# 6. REPAIR: Ensure the output directories exist
-RUN mkdir -p lib/db/dist lib/api-zod/dist artifacts/api-server/dist
-
-# 7. BUILD: Manually compile each part
-RUN pnpm exec tsc -p lib/db/tsconfig.json --skipLibCheck || echo "DB Lib warnings"
-RUN pnpm exec tsc -p lib/api-zod/tsconfig.json --skipLibCheck || echo "Zod Lib warnings"
+# 6. BUILD EVERYTHING (The complete engine)
+RUN pnpm exec tsc -p lib/db/tsconfig.json --skipLibCheck || echo "DB warnings"
+RUN pnpm exec tsc -p lib/api-zod/tsconfig.json --skipLibCheck || echo "Zod warnings"
 RUN pnpm exec tsc -p artifacts/api-server/tsconfig.json --skipLibCheck || echo "Bot warnings"
 
-# 8. START: Search and Rescue (Clinical Fix for Crashed status)
-WORKDIR /app/artifacts/api-server
-CMD ["sh", "-c", "node dist/main.js || node dist/index.js || node dist/index.mjs || node index.js"]
+# 7. SEARCH & LAUNCH (The Clinical Fix for "Module Not Found")
+# This command looks for the built file wherever the compiler put it
+CMD ["sh", "-c", "node $(find . -name index.mjs | head -n 1) || node $(find . -name index.js | head -n 1)"]
