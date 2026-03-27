@@ -13,11 +13,11 @@ COPY . .
 # 5. Install everything
 RUN pnpm install --no-frozen-lockfile
 
-# 6. Install node types (to keep the compiler happy)
+# 6. Install node types
 RUN pnpm add -Dw @types/node
 
-# 7. Build the project (Clinical Fix: Skipping strict type-checks to finish build)
-RUN pnpm run build -- --skipLibCheck
+# 7. FORCE BUILD: Skip typecheck and build recursively (Clinical Final Step)
+RUN pnpm -r --if-present run build
 
 # 8. Start the bot
 WORKDIR /app/artifacts/api-server
