@@ -7,7 +7,7 @@ RUN npm install -g pnpm
 # 3. Set the working directory
 WORKDIR /app
 
-# 4. Copy ONLY the configuration files first (This is the clinical part)
+# 4. Copy configuration files (CRITICAL: added tsconfig.json here)
 COPY pnpm-lock.yaml pnpm-workspace.yaml package.json tsconfig.json ./
 
 # 5. Copy the library and bot folders
