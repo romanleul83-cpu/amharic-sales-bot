@@ -13,10 +13,12 @@ COPY . .
 # 5. Install all dependencies
 RUN pnpm install --no-frozen-lockfile
 
-# 6. Build the DB library manually (Clinical Fix for missing script)
+# 6. BUILD INTERNAL LIBRARIES (The "Engine" Parts)
+# We build them manually to bypass missing scripts
 RUN pnpm exec tsc -p lib/db/tsconfig.json --skipLibCheck
+RUN pnpm exec tsc -p lib/api-zod/tsconfig.json --skipLibCheck
 
-# 7. Build the main bot (Direct compilation)
+# 7. BUILD THE MAIN BOT (The "Brain")
 RUN pnpm exec tsc -p artifacts/api-server/tsconfig.json --skipLibCheck
 
 # 8. Start the bot
