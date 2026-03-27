@@ -16,8 +16,8 @@ RUN pnpm install --no-frozen-lockfile
 # 6. Install node types
 RUN pnpm add -Dw @types/node
 
-# 7. LASER BUILD: Build only the bot and its needed libraries (Clinical Fix)
-RUN pnpm run build --filter "@workspace/api-server..." -- --skipLibCheck
+# 7. DIRECT COMPILE: Bypass failing scripts and force build (Clinical Fix)
+RUN pnpm exec tsc -p artifacts/api-server/tsconfig.json --skipLibCheck
 
 # 8. Start the bot
 WORKDIR /app/artifacts/api-server
