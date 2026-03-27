@@ -7,19 +7,15 @@ RUN npm install -g pnpm
 # 3. Set the working directory
 WORKDIR /app
 
-# 4. Copy configuration files (CRITICAL: added tsconfig.json here)
-COPY pnpm-lock.yaml pnpm-workspace.yaml package.json tsconfig.json ./
+# 4. Copy the entire project (Clinical move: ensures nothing is missing)
+COPY . .
 
-# 5. Copy the library and bot folders
-COPY lib/ ./lib/
-COPY artifacts/api-server/ ./artifacts/api-server/
-
-# 6. Install everything
+# 5. Install everything
 RUN pnpm install --no-frozen-lockfile
 
-# 7. Build the project
+# 6. Build the libraries and the bot
 RUN pnpm run build
 
-# 8. Start the bot
+# 7. Start the bot
 WORKDIR /app/artifacts/api-server
 CMD ["pnpm", "run", "start"]
