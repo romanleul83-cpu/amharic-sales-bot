@@ -16,8 +16,8 @@ RUN pnpm install --no-frozen-lockfile
 # 6. Install node types
 RUN pnpm add -Dw @types/node
 
-# 7. FORCE BUILD: Skip typecheck and build recursively (Clinical Final Step)
-RUN pnpm -r --if-present run build
+# 7. LASER BUILD: Build only the bot and its needed libraries (Clinical Fix)
+RUN pnpm run build --filter "@workspace/api-server..." -- --skipLibCheck
 
 # 8. Start the bot
 WORKDIR /app/artifacts/api-server
