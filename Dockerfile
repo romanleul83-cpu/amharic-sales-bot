@@ -1,23 +1,23 @@
-# 1. Start with Node 20
+# 1. Use Node 20
 FROM node:20-slim
 
 # 2. Install pnpm
 RUN npm install -g pnpm
 
-# 3. Set the working directory
+# 3. Set work directory
 WORKDIR /app
 
-# 4. Copy the entire project
+# 4. Copy everything
 COPY . .
 
-# 5. Install everything
+# 5. Install all dependencies
 RUN pnpm install --no-frozen-lockfile
 
-# 6. Install node types
-RUN pnpm add -Dw @types/node
+# 6. Build the DB library first (This is what was missing!)
+RUN pnpm --filter "./lib/db" run build
 
-# 7. DIRECT COMPILE: Bypass failing scripts and force build (Clinical Fix)
-RUN pnpm exec tsc -p artifacts/api-server/tsconfig.json --skipLibCheck
+# 7. Now build the main bot
+RUN pnpm --filter "@workspace/api-server" run build -- --skipLibCheck
 
 # 8. Start the bot
 WORKDIR /app/artifacts/api-server
