@@ -13,11 +13,11 @@ COPY . .
 # 5. Install all dependencies
 RUN pnpm install --no-frozen-lockfile
 
-# 6. Build the DB library first (This is what was missing!)
-RUN pnpm --filter "./lib/db" run build
+# 6. Build the DB library manually (Clinical Fix for missing script)
+RUN pnpm exec tsc -p lib/db/tsconfig.json --skipLibCheck
 
-# 7. Now build the main bot
-RUN pnpm --filter "@workspace/api-server" run build -- --skipLibCheck
+# 7. Build the main bot (Direct compilation)
+RUN pnpm exec tsc -p artifacts/api-server/tsconfig.json --skipLibCheck
 
 # 8. Start the bot
 WORKDIR /app/artifacts/api-server
